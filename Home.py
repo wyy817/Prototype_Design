@@ -38,8 +38,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Header
-st.markdown("<h1 class='main-header'>AI-DRIVEN MARKET OPPORTUNITY ANALYSIS FOR GROCERY PLATFORMS</h1>", unsafe_allow_html=True)
-st.markdown("<h3 class='sub-header'>Freshippo, Dingdong, Metro, and Aldi Analysis</h3>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-header'>AI-DRIVEN MARKET OPPORTUNITY ANALYSIS</h1>", unsafe_allow_html=True)
+# st.markdown("<h3 class='sub-header'>Freshippo, Dingdong, Metro, and Aldi Analysis</h3>", unsafe_allow_html=True)
 
 st.markdown("---")
 
