@@ -863,18 +863,23 @@ def get_personalized_recommendation(preference_type):
             'Discount Views'
         ],
         'Count': [
-            st.session_state.behavior_data['quality_clicks'],
-            st.session_state.behavior_data['trace_views'],
-            st.session_state.behavior_data['organic_views'],
-            st.session_state.behavior_data['price_clicks'],
-            st.session_state.behavior_data['discount_views']
+            int(st.session_state.behavior_data['quality_clicks']),
+            int(st.session_state.behavior_data['trace_views']),
+            int(st.session_state.behavior_data['organic_views']),
+            int(st.session_state.behavior_data['price_clicks']),
+            int(st.session_state.behavior_data['discount_views'])
         ],
-        'Weight': [2.0, 3.0, 2.5, 2.0, 3.0],
+        'Weight': ['2.0', '3.0', '2.5', '2.0', '3.0'],
         'Category': ['Quality', 'Quality', 'Quality', 'Value', 'Value']
     }
     
     behavior_df = pd.DataFrame(behavior_df_data)
-    behavior_df['Weighted Score'] = behavior_df['Count'] * behavior_df['Weight']
+    # Calculate weighted score as string to avoid type issues
+    weighted_scores = [
+        float(behavior_df_data['Count'][i]) * float(behavior_df_data['Weight'][i]) 
+        for i in range(5)
+    ]
+    behavior_df['Weighted Score'] = [f"{s:.1f}" for s in weighted_scores]
     
     st.dataframe(behavior_df, use_container_width=True, hide_index=True)
     
