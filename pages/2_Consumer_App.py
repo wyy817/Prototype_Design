@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
+import pandas as pd
 from datetime import datetime
 import random
 
@@ -85,6 +86,18 @@ elif user_type == "Value Priority":
 else:
     st.sidebar.info("We'll recommend based on your browsing behavior")
 
+# Initialize behavior tracking session state
+if 'behavior_data' not in st.session_state:
+    st.session_state.behavior_data = {
+        'quality_clicks': 0,
+        'price_clicks': 0,
+        'trace_views': 0,
+        'discount_views': 0,
+        'organic_views': 0,
+        'detected_type': None,
+        'confidence': 0
+    }
+
 # Sample product data
 products = [
     {
@@ -162,11 +175,12 @@ products = [
 ]
 
 # Main content tabs
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "Personalized Recommendations",
     "Traceability System",
     "Price-Quality Balance Tool",
-    "AI Shopping Assistant"
+    "AI Shopping Assistant",
+    "🧪 Auto-Detect Demo"
 ])
 
 # TAB 1: Personalized Recommendations
@@ -552,6 +566,371 @@ Would you like specific recommendations based on:
     today_tip = tips[datetime.now().day % len(tips)]
     
     st.info(today_tip)
+
+# TAB 5: Auto-Detect Demo
+with tab5:
+    st.markdown("### 🧪 Auto-Detect User Preference Demo")
+    
+    st.markdown("""
+    <div style='background-color: #E3F2FD; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;'>
+    <h4>🎯 How Auto-Detection Works</h4>
+    <p>Our AI system analyzes your browsing behavior in real-time to understand your shopping priorities.
+    Try the interactive simulation below to see how we detect whether you're a <b>Quality Priority</b> or <b>Value Priority</b> shopper!</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Reset behavior button
+    if st.button("🔄 Reset Behavior Data", key="reset_behavior"):
+        st.session_state.behavior_data = {
+            'quality_clicks': 0,
+            'price_clicks': 0,
+            'trace_views': 0,
+            'discount_views': 0,
+            'organic_views': 0,
+            'detected_type': None,
+            'confidence': 0
+        }
+        st.rerun()
+    
+    st.markdown("---")
+    
+    # Interactive Behavior Simulation
+    st.markdown("### 📊 Simulate Your Browsing Behavior")
+    st.markdown("Click the buttons below to simulate different browsing behaviors:")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div style='background-color: #E8F5E9; padding: 1rem; border-radius: 10px;'>
+        <h4 style='color: #1B5E20;'>🌿 Quality-Related Actions</h4>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        if st.button("👆 Click on Quality Score", key="demo_quality_click"):
+            st.session_state.behavior_data['quality_clicks'] += 1
+            st.toast("Recorded: Quality score click")
+        
+        if st.button("🔍 View Traceability Info", key="demo_trace_view"):
+            st.session_state.behavior_data['trace_views'] += 1
+            st.toast("Recorded: Traceability view")
+        
+        if st.button("🥬 Browse Organic Products", key="demo_organic_view"):
+            st.session_state.behavior_data['organic_views'] += 1
+            st.toast("Recorded: Organic product view")
+        
+        if st.button("📋 Check Certifications", key="demo_cert_click"):
+            st.session_state.behavior_data['quality_clicks'] += 1
+            st.session_state.behavior_data['trace_views'] += 1
+            st.toast("Recorded: Certification check")
+    
+    with col2:
+        st.markdown("""
+        <div style='background-color: #FFF3E0; padding: 1rem; border-radius: 10px;'>
+        <h4 style='color: #E65100;'>💰 Value-Related Actions</h4>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        if st.button("👆 Click on Price Tag", key="demo_price_click"):
+            st.session_state.behavior_data['price_clicks'] += 1
+            st.toast("Recorded: Price click")
+        
+        if st.button("🏷️ View Discount Offers", key="demo_discount_view"):
+            st.session_state.behavior_data['discount_views'] += 1
+            st.toast("Recorded: Discount view")
+        
+        if st.button("📉 Sort by Price (Low to High)", key="demo_sort_price"):
+            st.session_state.behavior_data['price_clicks'] += 2
+            st.toast("Recorded: Price sorting")
+        
+        if st.button("🛒 Add Sale Item to Cart", key="demo_sale_add"):
+            st.session_state.behavior_data['price_clicks'] += 1
+            st.session_state.behavior_data['discount_views'] += 1
+            st.toast("Recorded: Sale item added")
+    
+    st.markdown("---")
+    
+    # Detection Algorithm Visualization
+    st.markdown("### 🤖 Detection Algorithm (Real-time)")
+    
+    # Calculate scores
+    quality_score = (
+        st.session_state.behavior_data['quality_clicks'] * 2 +
+        st.session_state.behavior_data['trace_views'] * 3 +
+        st.session_state.behavior_data['organic_views'] * 2.5
+    )
+    
+    value_score = (
+        st.session_state.behavior_data['price_clicks'] * 2 +
+        st.session_state.behavior_data['discount_views'] * 3
+    )
+    
+    total_score = quality_score + value_score
+    
+    # Show algorithm code
+    with st.expander("📝 View Detection Algorithm Code", expanded=True):
+        st.code('''
+def detect_user_preference(behavior_data):
+    """
+    Auto-detect user preference based on browsing behavior.
+    
+    Weights:
+    - Quality indicators: quality_clicks(2x), trace_views(3x), organic_views(2.5x)
+    - Value indicators: price_clicks(2x), discount_views(3x)
+    """
+    
+    # Calculate weighted scores
+    quality_score = (
+        behavior_data['quality_clicks'] * 2.0 +
+        behavior_data['trace_views'] * 3.0 +
+        behavior_data['organic_views'] * 2.5
+    )
+    
+    value_score = (
+        behavior_data['price_clicks'] * 2.0 +
+        behavior_data['discount_views'] * 3.0
+    )
+    
+    total_score = quality_score + value_score
+    
+    # Determine preference type
+    if total_score == 0:
+        return {
+            'type': 'Undetermined',
+            'confidence': 0,
+            'message': 'Not enough data. Keep browsing!'
+        }
+    
+    # Calculate confidence (difference between scores / total)
+    confidence = abs(quality_score - value_score) / total_score * 100
+    
+    if quality_score > value_score:
+        preference_type = 'Quality Priority'
+        primary_score = quality_score
+    else:
+        preference_type = 'Value Priority'
+        primary_score = value_score
+    
+    # Minimum threshold for confident detection
+    min_actions = 3
+    total_actions = sum(behavior_data.values())
+    
+    if total_actions < min_actions:
+        confidence = confidence * (total_actions / min_actions)
+    
+    return {
+        'type': preference_type,
+        'confidence': min(confidence, 95),  # Cap at 95%
+        'quality_score': quality_score,
+        'value_score': value_score,
+        'recommendation': get_personalized_recommendation(preference_type)
+    }
+
+def get_personalized_recommendation(preference_type):
+    """Generate personalized product recommendations"""
+    if preference_type == 'Quality Priority':
+        return {
+            'sort_by': 'quality_score',
+            'highlight': ['certification', 'traceability', 'organic'],
+            'filters': {'min_quality': 0.9}
+        }
+    else:
+        return {
+            'sort_by': 'discount_percent',
+            'highlight': ['price', 'savings', 'value_score'],
+            'filters': {'max_price': 50}
+        }
+''', language='python')
+    
+    st.markdown("---")
+    
+    # Real-time Detection Results
+    st.markdown("### 📈 Detection Results")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "Quality Score", 
+            f"{quality_score:.1f}",
+            delta=f"+{st.session_state.behavior_data['quality_clicks'] + st.session_state.behavior_data['trace_views'] + st.session_state.behavior_data['organic_views']} actions"
+        )
+    
+    with col2:
+        st.metric(
+            "Value Score", 
+            f"{value_score:.1f}",
+            delta=f"+{st.session_state.behavior_data['price_clicks'] + st.session_state.behavior_data['discount_views']} actions"
+        )
+    
+    with col3:
+        if total_score > 0:
+            confidence = abs(quality_score - value_score) / total_score * 100
+            confidence = min(confidence, 95)
+        else:
+            confidence = 0
+        st.metric("Confidence", f"{confidence:.0f}%")
+    
+    # Visualization - Score Comparison Bar
+    if total_score > 0:
+        fig = go.Figure()
+        
+        fig.add_trace(go.Bar(
+            x=['Quality Priority', 'Value Priority'],
+            y=[quality_score, value_score],
+            marker_color=['#2E7D32', '#E65100'],
+            text=[f'{quality_score:.1f}', f'{value_score:.1f}'],
+            textposition='outside'
+        ))
+        
+        fig.update_layout(
+            title="Behavior Score Comparison",
+            yaxis_title="Weighted Score",
+            height=300,
+            showlegend=False
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+    
+    # Detection Result Display
+    st.markdown("### 🎯 Detected User Type")
+    
+    if total_score == 0:
+        st.warning("""
+        **Status: Collecting Data...**
+        
+        We haven't detected enough browsing behavior yet. Try clicking on some of the action buttons above to simulate your shopping behavior!
+        """)
+    elif total_score > 0 and confidence < 30:
+        st.info(f"""
+        **Status: Still Learning...**
+        
+        Current tendency: {"Quality Priority" if quality_score > value_score else "Value Priority"}
+        
+        Confidence is still low ({confidence:.0f}%). We need more browsing data to make a confident prediction.
+        Keep interacting with the simulation!
+        """)
+    else:
+        detected_type = "Quality Priority" if quality_score > value_score else "Value Priority"
+        
+        if detected_type == "Quality Priority":
+            st.success(f"""
+            **🌿 Detected: Quality Priority Shopper**
+            
+            Confidence: {confidence:.0f}%
+            
+            **Based on your behavior, we've identified that you prioritize:**
+            - Food safety and quality assurance
+            - Full supply chain traceability
+            - Organic and certified products
+            - Quality stability over price fluctuations
+            
+            **Personalized Experience Activated:**
+            - Products sorted by quality score
+            - Quality badges and certifications highlighted
+            - Traceability information prominently displayed
+            - Organic products recommended first
+            """)
+        else:
+            st.success(f"""
+            **💰 Detected: Value Priority Shopper**
+            
+            Confidence: {confidence:.0f}%
+            
+            **Based on your behavior, we've identified that you prioritize:**
+            - Competitive pricing and good deals
+            - Discount offers and promotions
+            - Value for money ratio
+            - Budget-conscious shopping
+            
+            **Personalized Experience Activated:**
+            - Products sorted by discount percentage
+            - Price tags and savings highlighted
+            - Best value recommendations shown first
+            - Price alerts for favorite products
+            """)
+    
+    # Behavior Data Summary
+    st.markdown("---")
+    st.markdown("### 📋 Behavior Data Log")
+    
+    behavior_df_data = {
+        'Behavior Type': [
+            'Quality Score Clicks',
+            'Traceability Views', 
+            'Organic Product Views',
+            'Price Clicks',
+            'Discount Views'
+        ],
+        'Count': [
+            st.session_state.behavior_data['quality_clicks'],
+            st.session_state.behavior_data['trace_views'],
+            st.session_state.behavior_data['organic_views'],
+            st.session_state.behavior_data['price_clicks'],
+            st.session_state.behavior_data['discount_views']
+        ],
+        'Weight': [2.0, 3.0, 2.5, 2.0, 3.0],
+        'Category': ['Quality', 'Quality', 'Quality', 'Value', 'Value']
+    }
+    
+    behavior_df = pd.DataFrame(behavior_df_data)
+    behavior_df['Weighted Score'] = behavior_df['Count'] * behavior_df['Weight']
+    
+    st.dataframe(behavior_df, use_container_width=True, hide_index=True)
+    
+    # Technical Implementation Note
+    st.markdown("---")
+    with st.expander("🔧 Technical Implementation Details"):
+        st.markdown("""
+        ### How This Would Work in Production
+        
+        **1. Data Collection Points:**
+        - Click events on product cards (quality badges, price tags, etc.)
+        - Time spent viewing traceability information
+        - Filter and sort preferences
+        - Cart additions and purchase history
+        - Search queries analysis
+        
+        **2. Machine Learning Model:**
+        ```python
+        from sklearn.ensemble import RandomForestClassifier
+        from sklearn.preprocessing import StandardScaler
+        
+        class UserPreferenceDetector:
+            def __init__(self):
+                self.model = RandomForestClassifier(n_estimators=100)
+                self.scaler = StandardScaler()
+            
+            def extract_features(self, user_session):
+                return {
+                    'quality_click_ratio': user_session.quality_clicks / max(user_session.total_clicks, 1),
+                    'trace_view_time_pct': user_session.trace_view_time / max(user_session.total_time, 1),
+                    'organic_browse_ratio': user_session.organic_views / max(user_session.total_views, 1),
+                    'price_sort_count': user_session.price_sort_events,
+                    'discount_click_ratio': user_session.discount_clicks / max(user_session.total_clicks, 1),
+                    'avg_cart_item_price': user_session.avg_cart_price,
+                    'cart_discount_items_pct': user_session.discount_items / max(user_session.cart_size, 1)
+                }
+            
+            def predict(self, features):
+                scaled_features = self.scaler.transform([features])
+                prediction = self.model.predict(scaled_features)
+                confidence = max(self.model.predict_proba(scaled_features)[0])
+                return prediction[0], confidence
+        ```
+        
+        **3. Real-time Updates:**
+        - Behavior tracked via event stream (Kafka/Redis)
+        - Model inference at edge for low latency
+        - A/B testing for recommendation strategies
+        - Continuous model retraining with new data
+        
+        **4. Privacy Considerations:**
+        - All behavior data anonymized
+        - User consent for personalization
+        - Option to reset preferences
+        - Transparent algorithm explanation
+        """)
 
 # Shopping Cart in Sidebar
 with st.sidebar:
