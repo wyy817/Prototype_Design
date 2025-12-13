@@ -72,7 +72,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("""
     <div style='text-align: center; margin-bottom: 1rem;'>
-    <h3>CP Dashboard (B2B)</h3>
+    <h3>CP Dashboard</h3>
     <p>Strategic insights and competitor intelligence for decision makers</p>
     </div>
     """, unsafe_allow_html=True)
@@ -94,7 +94,7 @@ with col1:
 with col2:
     st.markdown("""
     <div style='text-align: center; margin-bottom: 1rem;'>
-    <h3>Consumer Application (B2C)</h3>
+    <h3>Consumer Application</h3>
     <p>User-centered shopping experience with AI-powered features</p>
     </div>
     """, unsafe_allow_html=True)
