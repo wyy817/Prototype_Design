@@ -74,7 +74,7 @@ The prototype focuses on:
 │    - Competitor Intelligence    │    - Traceability System      │
 │    - Market Analysis            │    - Price-Quality Tool       │
 │    - Customer Insights          │    - AI Shopping Assistant    │
-│    - Opportunity Engine         │                               │
+│    - Opportunity Engine         │    - Auto-Detect Demo         │
 ├─────────────────────────────────┴───────────────────────────────┤
 │                      Data Loading Layer                          │
 │                      (utils/data_loader.py)                      │
@@ -128,7 +128,7 @@ Prototype_Design-main/
 │ • Competitor Intel  │         │ • Traceability      │
 │ • Market Analysis   │         │ • Price-Quality     │
 │ • Customer Insights │         │ • AI Assistant      │
-│ • Opportunity Engine│         │                     │
+│ • Opportunity Engine│         │ • Auto-Detect Demo  │
 └─────────────────────┘         └─────────────────────┘
 ```
 
@@ -591,6 +591,187 @@ with st.sidebar:
             st.success("Order placed successfully!")
             st.session_state.cart = []
 ```
+
+### 6.8 Tab 5: Auto-Detect User Preference Demo
+
+**Purpose:** Interactive demonstration of the AI-powered user preference detection system that analyzes browsing behavior to automatically classify shoppers.
+
+**Behavior Tracking Session State:**
+```python
+if 'behavior_data' not in st.session_state:
+    st.session_state.behavior_data = {
+        'quality_clicks': 0,      # Clicks on quality scores
+        'price_clicks': 0,        # Clicks on price tags
+        'trace_views': 0,         # Traceability info views
+        'discount_views': 0,      # Discount/sale views
+        'organic_views': 0,       # Organic product views
+        'detected_type': None,    # Detected user type
+        'confidence': 0           # Detection confidence
+    }
+```
+
+**Interactive Behavior Simulation:**
+
+Users can simulate two types of shopping behaviors through clickable buttons:
+
+| Quality-Related Actions | Value-Related Actions |
+|------------------------|----------------------|
+| Click on Quality Score | Click on Price Tag |
+| View Traceability Info | View Discount Offers |
+| Browse Organic Products | Sort by Price (Low to High) |
+| Check Certifications | Add Sale Item to Cart |
+
+**Detection Algorithm:**
+
+The system uses a weighted scoring approach to classify users:
+
+```python
+def detect_user_preference(behavior_data):
+    """
+    Auto-detect user preference based on browsing behavior.
+    
+    Weights:
+    - Quality indicators: quality_clicks(2x), trace_views(3x), organic_views(2.5x)
+    - Value indicators: price_clicks(2x), discount_views(3x)
+    """
+    
+    # Calculate weighted scores
+    quality_score = (
+        behavior_data['quality_clicks'] * 2.0 +
+        behavior_data['trace_views'] * 3.0 +
+        behavior_data['organic_views'] * 2.5
+    )
+    
+    value_score = (
+        behavior_data['price_clicks'] * 2.0 +
+        behavior_data['discount_views'] * 3.0
+    )
+    
+    total_score = quality_score + value_score
+    
+    # Determine preference type
+    if total_score == 0:
+        return {'type': 'Undetermined', 'confidence': 0}
+    
+    # Calculate confidence
+    confidence = abs(quality_score - value_score) / total_score * 100
+    
+    if quality_score > value_score:
+        preference_type = 'Quality Priority'
+    else:
+        preference_type = 'Value Priority'
+    
+    return {
+        'type': preference_type,
+        'confidence': min(confidence, 95),
+        'quality_score': quality_score,
+        'value_score': value_score
+    }
+```
+
+**Weight Assignment Rationale:**
+
+| Behavior | Weight | Rationale |
+|----------|--------|-----------|
+| Quality Score Clicks | 2.0x | Direct interest in quality metrics |
+| Traceability Views | 3.0x | Strong indicator of safety concerns |
+| Organic Product Views | 2.5x | Premium quality preference |
+| Price Clicks | 2.0x | Direct interest in pricing |
+| Discount Views | 3.0x | Strong indicator of value seeking |
+
+**Real-time Detection Visualization:**
+
+1. **Score Metrics Display:**
+   - Quality Score (with action count)
+   - Value Score (with action count)
+   - Confidence percentage
+
+2. **Bar Chart Comparison:**
+   - Visual comparison of Quality vs Value scores
+   - Color-coded (Green: Quality, Orange: Value)
+
+3. **Detection Result Display:**
+   - Status messages based on data sufficiency
+   - Personalized experience recommendations
+
+**Detection Status Levels:**
+
+| Status | Condition | Message |
+|--------|-----------|---------|
+| Collecting Data | Total score = 0 | "Not enough data. Keep browsing!" |
+| Still Learning | Confidence < 30% | Current tendency shown, need more data |
+| Detected | Confidence ≥ 30% | Full preference profile with recommendations |
+
+**Personalized Experience Activation:**
+
+For Quality Priority shoppers:
+- Products sorted by quality score
+- Quality badges and certifications highlighted
+- Traceability information prominently displayed
+- Organic products recommended first
+
+For Value Priority shoppers:
+- Products sorted by discount percentage
+- Price tags and savings highlighted
+- Best value recommendations shown first
+- Price alerts for favorite products
+
+**Behavior Data Log:**
+
+Interactive DataFrame showing:
+| Column | Description |
+|--------|-------------|
+| Behavior Type | Type of user action |
+| Count | Number of occurrences |
+| Weight | Score multiplier |
+| Category | Quality or Value |
+| Weighted Score | Count × Weight |
+
+**Technical Implementation Details (Expandable Section):**
+
+The demo includes documentation for production implementation:
+
+1. **Data Collection Points:**
+   - Click events on product cards
+   - Time spent viewing traceability information
+   - Filter and sort preferences
+   - Cart additions and purchase history
+   - Search queries analysis
+
+2. **Machine Learning Model (Production):**
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+class UserPreferenceDetector:
+    def __init__(self):
+        self.model = RandomForestClassifier(n_estimators=100)
+    
+    def extract_features(self, user_session):
+        return {
+            'quality_click_ratio': user_session.quality_clicks / max(total_clicks, 1),
+            'trace_view_time_pct': user_session.trace_view_time / max(total_time, 1),
+            'organic_browse_ratio': user_session.organic_views / max(total_views, 1),
+            'price_sort_count': user_session.price_sort_events,
+            'discount_click_ratio': user_session.discount_clicks / max(total_clicks, 1)
+        }
+    
+    def predict(self, features):
+        prediction = self.model.predict(features)
+        confidence = max(self.model.predict_proba(features)[0])
+        return prediction, confidence
+```
+
+3. **Real-time Updates:**
+   - Behavior tracked via event stream (Kafka/Redis)
+   - Model inference at edge for low latency
+   - A/B testing for recommendation strategies
+   - Continuous model retraining with new data
+
+4. **Privacy Considerations:**
+   - All behavior data anonymized
+   - User consent for personalization
+   - Option to reset preferences
+   - Transparent algorithm explanation
 
 ---
 
