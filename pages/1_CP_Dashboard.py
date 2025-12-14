@@ -604,12 +604,8 @@ elif page == "Market Analysis":
 elif page == "Customer Insights":
     st.title("Customer Insights & Segmentation Analysis")
     
-    segment_key = st.selectbox(
-        "Select Customer Segment",
-        list(segments.keys()),
-        format_func=lambda x: segments[x]['segment_name']
-    )
-    
+    # Use fixed segment - Pragmatic Middle-Class Families
+    segment_key = 'pragmatic_middle_class'
     segment = segments[segment_key]
     
     # Segment Overview
@@ -633,23 +629,22 @@ elif page == "Customer Insights":
     st.markdown("### Jobs to Be Done (JTBD)")
     st.info(segment['jobs_to_be_done'])
     
-    if segment_key == 'pragmatic_middle_class':
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            st.markdown("#### Functional Jobs")
-            for job in segment['functional_jobs']:
-                st.markdown(f"- {job}")
-        
-        with col2:
-            st.markdown("#### Emotional Jobs")
-            for job in segment['emotional_jobs']:
-                st.markdown(f"- {job}")
-        
-        with col3:
-            st.markdown("#### Social Jobs")
-            for job in segment['social_jobs']:
-                st.markdown(f"- {job}")
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("#### Functional Jobs")
+        for job in segment['functional_jobs']:
+            st.markdown(f"- {job}")
+    
+    with col2:
+        st.markdown("#### Emotional Jobs")
+        for job in segment['emotional_jobs']:
+            st.markdown(f"- {job}")
+    
+    with col3:
+        st.markdown("#### Social Jobs")
+        for job in segment['social_jobs']:
+            st.markdown(f"- {job}")
     
     # Priorities
     st.markdown("---")
