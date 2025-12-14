@@ -302,6 +302,7 @@ with tab2:
         },
         {
             'stage': 'Final Mile',
+            'Responsibility': 'Includes photos taken before and after delivery',
             'location': 'Local Warehouse',
             'date': '2024-12-05',
             'status': 'Ready for Delivery',
