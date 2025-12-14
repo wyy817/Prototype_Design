@@ -45,7 +45,7 @@ CP Group (Charoen Pokphand Group) is one of the world's largest conglomerates, o
 ### 2.2 Objectives
 
 - Identify market gaps and opportunities in China's fresh e-commerce sector
-- Analyze key competitors (Dingdong Maicai and Freshippo)
+- Analyze key competitors (Dingdong and Freshippo)
 - Understand customer segments and their pain points
 - Develop a prototype demonstrating potential market entry strategies
 - Create a consumer-facing application showcasing differentiated features
@@ -53,7 +53,7 @@ CP Group (Charoen Pokphand Group) is one of the world's largest conglomerates, o
 ### 2.3 Scope
 
 The prototype focuses on:
-- **Competitors Analyzed**: Dingdong Maicai, Freshippo (Hema Fresh)
+- **Competitors Analyzed**: Dingdong, Freshippo
 - **Market Coverage**: Tier 1 and New Tier 1 cities in China
 - **Primary Target Segment**: Pragmatic Middle-Class Families (28-45 years, ¥150,000-300,000 income)
 
@@ -215,8 +215,8 @@ with col1:
 
 **Competitors Analyzed:**
 
-| Feature | Dingdong Maicai | Freshippo (Hema Fresh) |
-|---------|-----------------|------------------------|
+| Feature | Dingdong | Freshippo |
+|---------|----------|-----------|
 | Model | Front Warehouse | Store-Warehouse Integration |
 | SKU Count | 2,800 | 3,500 |
 | Cities | 6 (YRD Focus) | 10+ (Tier 1+2) |
@@ -1171,7 +1171,7 @@ URL: http://localhost:8501
 ## Appendix B: Data Sources
 
 All data is extracted from:
-- Dingdong Maicai annual reports (2021-2024)
+- Dingdong annual reports (2021-2024)
 - Industry analysis documents
 - Customer research reports
 - Market trend reports

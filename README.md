@@ -41,7 +41,7 @@ streamlit run Home.py
 ## Data Sources
 
 All data is extracted from:
-- Dingdong Maicai annual reports (2021-2024)
+- Dingdong annual reports (2021-2024)
 - Industry analysis documents
 - Customer research reports
 - Market trend reports

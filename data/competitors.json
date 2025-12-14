@@ -1,6 +1,6 @@
 {
   "dingdong": {
-    "name": "Dingdong Maicai",
+    "name": "Dingdong",
     "model": "Front Warehouse Model",
     "description": "Operates pure online front warehouse model with focus on instant delivery within 1-3km radius",
     "cities": ["Shanghai", "Hangzhou", "Suzhou", "Nanjing", "Ningbo", "Wuxi"],
@@ -59,11 +59,11 @@
     }
   },
   "freshippo": {
-    "name": "Freshippo (Hema Fresh)",
+    "name": "Freshippo",
     "model": "Store-Warehouse Integration",
     "description": "Omnichannel model combining physical stores with online delivery, backed by Alibaba ecosystem",
     "cities": ["Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Hangzhou", "Chengdu", "Tier 2 cities"],
-    "city_strategy": "Dual-format: Hema Fresh in tier 1, Hema NB (Neighborhood) in tier 1 & 2 cities",
+    "city_strategy": "Dual-format: Freshippo Fresh in tier 1, Freshippo NB (Neighborhood) in tier 1 & 2 cities",
     "sku_count": 3500,
     "fulfillment_cost_2024": 82000000,
     "strengths": [

@@ -152,7 +152,7 @@ elif page == "Competitor Intelligence":
     # Competitor Selection
     competitor = st.selectbox(
         "Select Competitor for Detailed Analysis",
-        ["Dingdong Maicai", "Freshippo (Hema Fresh)", "Side-by-Side Comparison"]
+        ["Dingdong", "Freshippo", "Side-by-Side Comparison"]
     )
     
     if competitor == "Side-by-Side Comparison":
@@ -163,7 +163,7 @@ elif page == "Competitor Intelligence":
         with col1:
             st.markdown("""
             <div class='competitor-card'>
-            <h3>Dingdong Maicai</h3>
+            <h3>Dingdong</h3>
             <p><strong>Model:</strong> Front Warehouse (Pure Online)</p>
             <p><strong>Geographic Focus:</strong> Yangtze River Delta</p>
             <p><strong>Strategy:</strong> Quality over expansion</p>
@@ -181,7 +181,7 @@ elif page == "Competitor Intelligence":
         with col2:
             st.markdown("""
             <div class='competitor-card'>
-            <h3>Freshippo (Hema Fresh)</h3>
+            <h3>Freshippo</h3>
             <p><strong>Model:</strong> Store-Warehouse Integration</p>
             <p><strong>Geographic Focus:</strong> National (Tier 1+2)</p>
             <p><strong>Strategy:</strong> Omnichannel premium</p>
@@ -198,7 +198,7 @@ elif page == "Competitor Intelligence":
         
         # Financial Performance - Dingdong
         st.markdown("---")
-        st.markdown("### Dingdong Maicai Financial Performance (2021-2024)")
+        st.markdown("### Dingdong Financial Performance (2021-2024)")
         
         df_fin = pd.DataFrame(financials['annual_data'])
         df_fin['period'] = df_fin['year'].astype(str) + ' ' + df_fin['quarter']
@@ -220,7 +220,7 @@ elif page == "Competitor Intelligence":
         fig.add_hline(y=0, line_dash="dash", line_color="gray", annotation_text="Break-even")
         
         fig.update_layout(
-            title="Dingdong Maicai Profit/Loss Trend (Million CNY)",
+            title="Dingdong Profit/Loss Trend (Million CNY)",
             xaxis_title="Quarter",
             yaxis_title="Net Profit/Loss (Million CNY)",
             height=500,
@@ -301,7 +301,7 @@ elif page == "Competitor Intelligence":
         
         st.plotly_chart(fig, use_container_width=True)
     
-    elif competitor == "Dingdong Maicai":
+    elif competitor == "Dingdong":
         comp_data = competitors['dingdong']
         st.markdown(f"### {comp_data['name']} - Detailed Analysis")
         
@@ -366,13 +366,13 @@ elif page == "Competitor Intelligence":
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("**Hema Fresh**")
+            st.markdown("**Freshippo Fresh**")
             st.write(f"- Target: {comp_data['formats']['hema_fresh']['target']}")
             st.write(f"- Positioning: {comp_data['formats']['hema_fresh']['positioning']}")
             st.write(f"- Format: {comp_data['formats']['hema_fresh']['store_size']}")
         
         with col2:
-            st.markdown("**Hema NB (Neighborhood)**")
+            st.markdown("**Freshippo NB (Neighborhood)**")
             st.write(f"- Target: {comp_data['formats']['hema_nb']['target']}")
             st.write(f"- Positioning: {comp_data['formats']['hema_nb']['positioning']}")
             st.write(f"- Format: {comp_data['formats']['hema_nb']['store_size']}")
