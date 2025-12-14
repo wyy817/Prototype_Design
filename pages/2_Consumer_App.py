@@ -63,6 +63,34 @@ if 'cart' not in st.session_state:
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 
+# Initialize product reviews with sample data
+if 'product_reviews' not in st.session_state:
+    st.session_state.product_reviews = {
+        'Organic Baby Spinach': [
+            {'user': 'Alice W.', 'rating': 5, 'comment': 'Very fresh and crisp! The traceability info gave me confidence.', 'date': '2024-12-10', 'verified': True},
+            {'user': 'Mike L.', 'rating': 4, 'comment': 'Good quality, delivery was fast. Will buy again.', 'date': '2024-12-08', 'verified': True},
+            {'user': 'Sarah C.', 'rating': 5, 'comment': 'Love that I can see exactly where it came from!', 'date': '2024-12-05', 'verified': True}
+        ],
+        'Grass-Fed Australian Beef': [
+            {'user': 'David K.', 'rating': 5, 'comment': 'Premium quality beef, worth every penny.', 'date': '2024-12-09', 'verified': True},
+            {'user': 'Emma T.', 'rating': 4, 'comment': 'Tender and flavorful. Cold chain was well maintained.', 'date': '2024-12-07', 'verified': True}
+        ],
+        'Fresh Norwegian Salmon': [
+            {'user': 'John H.', 'rating': 5, 'comment': 'Incredibly fresh! The traceability showed it was caught just days ago.', 'date': '2024-12-11', 'verified': True},
+            {'user': 'Lisa M.', 'rating': 5, 'comment': 'Best salmon I have ever ordered online.', 'date': '2024-12-06', 'verified': True}
+        ],
+        'Low-Pesticide Cherry Tomatoes': [
+            {'user': 'Amy Z.', 'rating': 4, 'comment': 'Sweet and juicy! Great for salads.', 'date': '2024-12-10', 'verified': True}
+        ],
+        'Free-Range Eggs (10pcs)': [
+            {'user': 'Tom B.', 'rating': 5, 'comment': 'Orange yolks! You can taste the difference.', 'date': '2024-12-09', 'verified': True},
+            {'user': 'Nancy W.', 'rating': 5, 'comment': 'Finally eggs I can trust. Great traceability.', 'date': '2024-12-04', 'verified': True}
+        ],
+        'Organic Brown Rice (2kg)': [
+            {'user': 'Kevin L.', 'rating': 4, 'comment': 'Good quality rice, cooks well.', 'date': '2024-12-08', 'verified': True}
+        ]
+    }
+
 # Header
 st.title("Fresh Grocery Shopping Platform")
 
@@ -364,6 +392,115 @@ with tab2:
         **Risk Category Alert:** This product category requires extra attention to cold chain management.
         Our system monitors temperature throughout the supply chain to ensure safety.
         """)
+    
+    # User Reviews Section
+    st.markdown("---")
+    st.markdown("### 💬 Customer Reviews")
+    
+    # Get reviews for selected product
+    product_name = selected_product
+    reviews = st.session_state.product_reviews.get(product_name, [])
+    
+    # Review Summary
+    if reviews:
+        avg_rating = sum(r['rating'] for r in reviews) / len(reviews)
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric("Average Rating", f"{'⭐' * int(round(avg_rating))} {avg_rating:.1f}/5")
+        with col2:
+            st.metric("Total Reviews", len(reviews))
+        with col3:
+            verified_count = sum(1 for r in reviews if r.get('verified', False))
+            st.metric("Verified Purchases", f"{verified_count}/{len(reviews)}")
+    
+    # Display existing reviews
+    st.markdown("#### Recent Reviews")
+    
+    if reviews:
+        for review in reviews:
+            verified_badge = "✅ Verified Purchase" if review.get('verified', False) else ""
+            stars = "⭐" * review['rating']
+            
+            st.markdown(f"""
+            <div style='background-color: #FAFAFA; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border-left: 4px solid #2E7D32;'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <strong>{review['user']}</strong>
+                <span style='color: #666; font-size: 0.85rem;'>{review['date']} {verified_badge}</span>
+            </div>
+            <div style='color: #FFA000; margin: 0.3rem 0;'>{stars}</div>
+            <p style='margin: 0; color: #333;'>{review['comment']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+    else:
+        st.info("No reviews yet. Be the first to review this product!")
+    
+    # Submit new review
+    st.markdown("#### Write a Review")
+    
+    with st.form(key=f"review_form_{product_name}"):
+        col1, col2 = st.columns([1, 2])
+        
+        with col1:
+            user_name = st.text_input("Your Name", placeholder="e.g., John D.")
+            user_rating = st.select_slider(
+                "Rating",
+                options=[1, 2, 3, 4, 5],
+                value=5,
+                format_func=lambda x: "⭐" * x
+            )
+        
+        with col2:
+            user_comment = st.text_area(
+                "Your Review",
+                placeholder="Share your experience with this product...",
+                height=100
+            )
+        
+        submit_review = st.form_submit_button("Submit Review", type="primary")
+        
+        if submit_review:
+            if user_name and user_comment:
+                new_review = {
+                    'user': user_name,
+                    'rating': user_rating,
+                    'comment': user_comment,
+                    'date': datetime.now().strftime('%Y-%m-%d'),
+                    'verified': False  # Would be True if user purchased the product
+                }
+                
+                if product_name not in st.session_state.product_reviews:
+                    st.session_state.product_reviews[product_name] = []
+                
+                # Add new review at the beginning
+                st.session_state.product_reviews[product_name].insert(0, new_review)
+                st.success("Thank you for your review! It has been submitted successfully.")
+                st.rerun()
+            else:
+                st.error("Please fill in your name and review comment.")
+    
+    # Review Statistics
+    if reviews and len(reviews) >= 2:
+        st.markdown("#### Rating Distribution")
+        
+        rating_counts = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
+        for review in reviews:
+            rating_counts[review['rating']] += 1
+        
+        for rating in [5, 4, 3, 2, 1]:
+            count = rating_counts[rating]
+            percentage = (count / len(reviews)) * 100 if reviews else 0
+            bar_width = int(percentage * 2)  # Scale for display
+            
+            st.markdown(f"""
+            <div style='display: flex; align-items: center; margin-bottom: 0.3rem;'>
+                <span style='width: 60px;'>{'⭐' * rating}</span>
+                <div style='flex-grow: 1; background-color: #E0E0E0; height: 12px; border-radius: 6px; margin: 0 10px;'>
+                    <div style='width: {percentage}%; background-color: #FFA000; height: 100%; border-radius: 6px;'></div>
+                </div>
+                <span style='width: 40px; text-align: right;'>{count}</span>
+            </div>
+            """, unsafe_allow_html=True)
 
 # TAB 3: Price-Quality Balance Tool
 with tab3:
