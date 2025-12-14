@@ -108,33 +108,5 @@
       "local_produce": 0.60,
       "imported_premium": 0.40
     }
-  },
-  "tier1_high_income": {
-    "segment_name": "Tier 1 High-Income Professionals",
-    "percentage": 0.20,
-    "income_range_cny": "300000+",
-    "cities": ["Beijing", "Shanghai", "Guangzhou", "Shenzhen"],
-    "priorities": {
-      "quality": 0.98,
-      "convenience": 0.95,
-      "food_safety": 0.99,
-      "brand_reputation": 0.85,
-      "price_sensitivity": 0.30
-    },
-    "willingness_to_pay_premium": 0.75
-  },
-  "tier2_budget_conscious": {
-    "segment_name": "Tier 2 Budget-Conscious Middle Class",
-    "percentage": 0.35,
-    "income_range_cny": "80000-150000",
-    "cities": ["Tier 2 cities"],
-    "priorities": {
-      "price": 0.95,
-      "value_for_money": 0.92,
-      "quality": 0.70,
-      "promotions": 0.88,
-      "convenience": 0.60
-    },
-    "preferred_formats": ["Community group buying", "Value-oriented platforms"]
   }
 }
