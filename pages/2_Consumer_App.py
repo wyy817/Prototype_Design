@@ -346,12 +346,18 @@ with tab2:
             st.markdown(f"<span class='quality-badge quality-high'>{stage['status']}</span>", unsafe_allow_html=True)
         
         with col2:
+            # Build responsibility line if it exists
+            responsibility_html = ""
+            if 'Responsibility' in stage:
+                responsibility_html = f"<p><strong>📸 Responsibility:</strong> {stage['Responsibility']}</p>"
+            
             st.markdown(f"""
             <div class='trace-path'>
             <h4>{stage['stage']}</h4>
             <p><strong>Location:</strong> {stage['location']}</p>
             <p><strong>Date:</strong> {stage['date']}</p>
             <p>{stage['details']}</p>
+            {responsibility_html}
             </div>
             """, unsafe_allow_html=True)
     
