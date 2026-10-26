@@ -2,6 +2,9 @@
 
 AI-driven market opportunity analysis for grocery platforms (Freshippo, Dingdong, Metro, Aldi)
 
+> This is the first, Streamlit-based prototype. The full-stack follow-up (Vue 3 + FastAPI, strategy dashboard and consumer app) is in [cp-grocery-platform-demo](https://github.com/wyy817/cp-grocery-platform-demo).
+
+
 ## Setup Instructions
 
 1. Install dependencies:
